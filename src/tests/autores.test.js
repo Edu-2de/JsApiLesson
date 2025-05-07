@@ -18,13 +18,11 @@ describe('Testes CRUD de Autores', () => {
     });
 
     it('Deve atualizar um autor existente', async () => {
-        // Primeiro, cria um autor
         await request(app).post('/autores').send({
             id: 2,
             nome: 'Maria Oliveira',
         });
 
-        // Depois, atualiza o nome do autor
         const res = await request(app).put('/autores/2').send({
             nome: 'Maria Santos',
         });
@@ -43,22 +41,18 @@ describe('Testes CRUD de Autores', () => {
     });
 
     it('Deve deletar um autor existente', async () => {
-        // Primeiro, cria um autor
         await request(app).post('/autores').send({
             id: 3,
             nome: 'Carlos Souza',
         });
 
-        // Depois, deleta o autor
         const res = await request(app).delete('/autores/3');
-
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Autor removido com sucesso!');
     });
 
     it('Deve retornar erro ao tentar deletar um autor inexistente', async () => {
         const res = await request(app).delete('/autores/999');
-
         expect(res.statusCode).toEqual(200);
         expect(res.body.message).toEqual('Autor removido com sucesso!');
     });
