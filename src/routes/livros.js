@@ -16,3 +16,12 @@ router.post('/', (req, res) => {
       livros.push({ id, titulo, autorId });
       res.status(201).json({ message: 'Livro criado com sucesso!' });
   });
+
+
+router.get('/detalhes', (req, res) => {
+const livrosDetalhados = livros.map((livro) => {
+      const autor = autores.find((autor) => autor.id === livro.autorId);
+      return { ...livro, autor: autor || null };
+});
+res.json(livrosDetalhados);
+});
