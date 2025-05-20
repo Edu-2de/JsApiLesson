@@ -1,6 +1,13 @@
 const request = require('supertest');
 const app = require('../../server');
 
+beforeAll(async () => {
+    await request(app).post('/autores').send({
+        id: 1,
+        nome: 'Autor Teste'
+    });
+});
+
 describe('Testes CRUD de Livros', () => {
     it('Deve listar todos os livros', async () => {
         const res = await request(app).get('/livros');

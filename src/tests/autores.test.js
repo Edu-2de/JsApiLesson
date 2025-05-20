@@ -53,7 +53,7 @@ describe('Testes CRUD de Autores', () => {
 
     it('Deve retornar erro ao tentar deletar um autor inexistente', async () => {
         const res = await request(app).delete('/autores/999');
-        expect(res.statusCode).toEqual(200);
-        expect(res.body.message).toEqual('Autor removido com sucesso!');
+        expect(res.statusCode).toEqual(404);
+        expect(res.body.error).toEqual('Autor não encontrado');
     });
 });

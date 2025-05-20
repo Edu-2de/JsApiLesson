@@ -7,7 +7,6 @@ const autoresRoutes = require('./src/routes/autores');
 const authRoutes = require('./src/middleware/auth');
 const autenticar = require('./src/middleware/auth');
 
-// Middleware para trabalhar com JSON
 app.use(express.json());
 
 // Rotas públicas
@@ -22,7 +21,11 @@ app.get('/', (req, res) => {
     res.send('Bem-vindo à API RESTful!');
 });
 
-// Iniciar o servidor
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-});
+// Só inicia o servidor se não estiver em ambiente de teste
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => {
+        console.log(`Servidor rodando na porta ${PORT}`);
+    });
+}
+
+module.exports = app;

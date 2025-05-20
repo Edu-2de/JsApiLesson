@@ -32,4 +32,9 @@ router.get('/detalhes', (req, res) => {
     res.json(livrosDetalhados);
 });
 
+router.get('/', (req, res) => {
+    res.json(livros);
+});
+
+
 module.exports = router;
