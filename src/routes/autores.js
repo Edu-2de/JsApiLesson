@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Dados em memória
-let autores = [];
+const { autores, livros } = require('../data/db');
 
 // GET: Listar todos os autores
 router.get('/', (req, res) => {
@@ -30,7 +30,11 @@ router.put('/:id', (req, res) => {
 // DELETE: Remover um autor
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
-    autores = autores.filter((autor) => autor.id !== parseInt(id));
+    const index = autores.findIndex((autor) => autor.id === parseInt(id));
+    if (index === -1) {
+        return res.status(404).json({ error: 'Autor não encontrado' });
+    }
+    autores.splice(index, 1);
     res.json({ message: 'Autor removido com sucesso!' });
 });
 

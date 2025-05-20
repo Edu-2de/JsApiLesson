@@ -4,7 +4,7 @@ const PORT = 3000;
 
 const livrosRoutes = require('./src/routes/livros');
 const autoresRoutes = require('./src/routes/autores');
-const authRoutes = require('./src/routes/auth');
+const authRoutes = require('./src/middleware/auth');
 const autenticar = require('./src/middleware/auth');
 
 // Middleware para trabalhar com JSON
