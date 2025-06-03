@@ -12,6 +12,16 @@ router.use((req, res, next) => {
     next();
 });
 
+// GET: Listar livros com todos os detalhes (inclui objeto autor completo)
+// Coloque esta rota ANTES de /:id para evitar conflito!
+router.get('/detalhes', (req, res) => {
+    const livrosDetalhados = livros.map((livro) => {
+        const autor = autores.find((autor) => autor.id === livro.autorId);
+        return { ...livro, autor: autor || null };
+    });
+    res.json(livrosDetalhados);
+});
+
 // GET: Listar livros com detalhes do autor (nome do autor no lugar do autorId)
 router.get('/', (req, res) => {
     const livrosComAutor = livros.map((livro) => {
@@ -36,15 +46,6 @@ router.get('/:id', (req, res) => {
         titulo: livro.titulo,
         autor: autor ? autor.nome : null
     });
-});
-
-// GET: Listar livros com todos os detalhes (inclui objeto autor completo)
-router.get('/detalhes', (req, res) => {
-    const livrosDetalhados = livros.map((livro) => {
-        const autor = autores.find((autor) => autor.id === livro.autorId);
-        return { ...livro, autor: autor || null };
-    });
-    res.json(livrosDetalhados);
 });
 
 // POST: Criar um novo livro com validação (apenas admin)
