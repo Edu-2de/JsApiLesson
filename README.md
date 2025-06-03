@@ -4,11 +4,12 @@ Este projeto é uma API RESTful simples desenvolvida em Node.js com Express, que
 
 ## Funcionalidades
 
-- **Autenticação JWT** (`/auth/login` e `/auth/register`)
+- **Autenticação JWT** (`/auth/login`, `/auth/register`, `/auth/logout`)
 - **Registro de usuários comuns** (`/auth/register`)
 - **CRUD de Autores** (`/autores`)
 - **CRUD de Livros** (`/livros`)
 - **Listagem de livros com detalhes dos autores** (`/livros/detalhes`)
+- **Listagem de livros de um autor específico** (`/autores/:id/livros`)
 - **Permissões por papel (admin e usuário comum)**
 - **Testes automatizados com Jest e Supertest**
 
@@ -67,6 +68,9 @@ Antes de acessar as rotas protegidas, obtenha um token JWT:
   ```
   O usuário `admin` pode criar, atualizar e deletar livros/autores.
 
+- **POST** `/auth/logout`  
+  Logout simbólico. Basta remover o token do cliente.
+
 Inclua o token no header das requisições protegidas:
 ```
 Authorization: Bearer SEU_TOKEN_AQUI
@@ -89,10 +93,13 @@ Authorization: Bearer SEU_TOKEN_AQUI
 
 - `POST /auth/register` — Registra um novo usuário
 - `POST /auth/login` — Faz login e retorna um token JWT
+- `POST /auth/logout` — Logout simbólico (remova o token do cliente)
 
 ### Autores
 
 - `GET /autores` — Lista todos os autores
+- `GET /autores/:id` — Retorna um autor específico
+- `GET /autores/:id/livros` — Lista todos os livros de um autor específico
 - `POST /autores` — Cria um novo autor (**apenas admin**)
   ```json
   {
@@ -101,11 +108,18 @@ Authorization: Bearer SEU_TOKEN_AQUI
   }
   ```
 - `PUT /autores/:id` — Atualiza um autor existente (**apenas admin**)
+  ```json
+  {
+    "nome": "Novo Nome"
+  }
+  ```
 - `DELETE /autores/:id` — Remove um autor (**apenas admin**)
 
 ### Livros
 
-- `GET /livros` — Lista todos os livros
+- `GET /livros` — Lista todos os livros (com nome do autor)
+- `GET /livros/:id` — Retorna um livro específico (com nome do autor)
+- `GET /livros/detalhes` — Lista livros com todos os detalhes (inclui objeto autor completo)
 - `POST /livros` — Cria um novo livro (**apenas admin**)
   ```json
   {
@@ -115,8 +129,13 @@ Authorization: Bearer SEU_TOKEN_AQUI
   }
   ```
 - `PUT /livros/:id` — Atualiza um livro existente (**apenas admin**)
+  ```json
+  {
+    "titulo": "Novo Título",
+    "autorId": 2
+  }
+  ```
 - `DELETE /livros/:id` — Remove um livro (**apenas admin**)
-- `GET /livros/detalhes` — Lista livros com detalhes dos autores
 
 ---
 
@@ -136,6 +155,7 @@ npm test
 - O projeto utiliza autenticação JWT apenas para exemplificação.
 - Não utilize a chave secreta padrão em produção.
 - Usuários comuns só podem visualizar dados; apenas o admin pode modificar.
+- Para acessar rotas protegidas, sempre envie o token JWT no header.
 
 ---
 

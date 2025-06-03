@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Dados em memória
-const { autores } = require('../data/db');
+const { autores, livros } = require('../data/db');
 
 // Middleware: só admin pode modificar
 router.use((req, res, next) => {
@@ -15,6 +15,33 @@ router.use((req, res, next) => {
 // GET: Listar todos os autores
 router.get('/', (req, res) => {
     res.json(autores);
+});
+
+// GET: Obter um autor por ID
+router.get('/:id', (req, res) => {
+    const { id } = req.params;
+    const autor = autores.find((autor) => autor.id === parseInt(id));
+    if (!autor) return res.status(404).json({ error: 'Autor não encontrado' });
+    res.json(autor);
+});
+
+// GET: Listar todos os livros de um autor específico
+router.get('/:id/livros', (req, res) => {
+    const { id } = req.params;
+    const autor = autores.find((autor) => autor.id === parseInt(id));
+    if (!autor) return res.status(404).json({ error: 'Autor não encontrado' });
+
+    const livrosDoAutor = livros
+        .filter((livro) => livro.autorId === parseInt(id))
+        .map((livro) => ({
+            id: livro.id,
+            titulo: livro.titulo
+        }));
+
+    res.json({
+        autor: autor.nome,
+        livros: livrosDoAutor
+    });
 });
 
 // POST: Criar um novo autor (apenas admin)

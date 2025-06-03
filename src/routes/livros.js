@@ -12,18 +12,39 @@ router.use((req, res, next) => {
     next();
 });
 
-// GET: Listar livros com detalhes do autor
+// GET: Listar livros com detalhes do autor (nome do autor no lugar do autorId)
+router.get('/', (req, res) => {
+    const livrosComAutor = livros.map((livro) => {
+        const autor = autores.find((autor) => autor.id === livro.autorId);
+        return {
+            id: livro.id,
+            titulo: livro.titulo,
+            autor: autor ? autor.nome : null
+        };
+    });
+    res.json(livrosComAutor);
+});
+
+// GET: Obter um livro por ID (com nome do autor)
+router.get('/:id', (req, res) => {
+    const { id } = req.params;
+    const livro = livros.find((livro) => livro.id === parseInt(id));
+    if (!livro) return res.status(404).json({ error: 'Livro não encontrado' });
+    const autor = autores.find((autor) => autor.id === livro.autorId);
+    res.json({
+        id: livro.id,
+        titulo: livro.titulo,
+        autor: autor ? autor.nome : null
+    });
+});
+
+// GET: Listar livros com todos os detalhes (inclui objeto autor completo)
 router.get('/detalhes', (req, res) => {
     const livrosDetalhados = livros.map((livro) => {
         const autor = autores.find((autor) => autor.id === livro.autorId);
         return { ...livro, autor: autor || null };
     });
     res.json(livrosDetalhados);
-});
-
-// GET: Listar livros
-router.get('/', (req, res) => {
-    res.json(livros);
 });
 
 // POST: Criar um novo livro com validação (apenas admin)
