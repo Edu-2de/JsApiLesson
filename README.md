@@ -4,10 +4,12 @@ Este projeto é uma API RESTful simples desenvolvida em Node.js com Express, que
 
 ## Funcionalidades
 
-- **Autenticação JWT** (`/auth/login`)
+- **Autenticação JWT** (`/auth/login` e `/auth/register`)
+- **Registro de usuários comuns** (`/auth/register`)
 - **CRUD de Autores** (`/autores`)
 - **CRUD de Livros** (`/livros`)
 - **Listagem de livros com detalhes dos autores** (`/livros/detalhes`)
+- **Permissões por papel (admin e usuário comum)**
 - **Testes automatizados com Jest e Supertest**
 
 ---
@@ -39,18 +41,31 @@ O servidor estará disponível em `http://localhost:3000`.
 
 ---
 
-## Autenticação
+## Autenticação e Registro
 
 Antes de acessar as rotas protegidas, obtenha um token JWT:
 
-- **POST** `/auth/login`
+- **POST** `/auth/register`  
+  Registra um novo usuário (role padrão: `user`).  
+  Exemplo:
+  ```json
+  {
+    "username": "usuario",
+    "password": "senha"
+  }
+  ```
+  O usuário registrado só poderá visualizar livros e autores.
+
+- **POST** `/auth/login`  
+  Faz login e retorna um token JWT.  
+  Exemplo:
   ```json
   {
     "username": "admin",
     "password": "1234"
   }
   ```
-- O token será retornado no campo `token`.
+  O usuário `admin` pode criar, atualizar e deletar livros/autores.
 
 Inclua o token no header das requisições protegidas:
 ```
@@ -59,25 +74,39 @@ Authorization: Bearer SEU_TOKEN_AQUI
 
 ---
 
+## Permissões
+
+- **Usuário comum** (`user`):  
+  - Só pode visualizar (`GET`) livros e autores.
+- **Admin** (`admin`):  
+  - Pode criar, atualizar e deletar livros e autores.
+
+---
+
 ## Endpoints
+
+### Autenticação
+
+- `POST /auth/register` — Registra um novo usuário
+- `POST /auth/login` — Faz login e retorna um token JWT
 
 ### Autores
 
 - `GET /autores` — Lista todos os autores
-- `POST /autores` — Cria um novo autor
+- `POST /autores` — Cria um novo autor (**apenas admin**)
   ```json
   {
     "id": 1,
     "nome": "Nome do Autor"
   }
   ```
-- `PUT /autores/:id` — Atualiza um autor existente
-- `DELETE /autores/:id` — Remove um autor
+- `PUT /autores/:id` — Atualiza um autor existente (**apenas admin**)
+- `DELETE /autores/:id` — Remove um autor (**apenas admin**)
 
 ### Livros
 
 - `GET /livros` — Lista todos os livros
-- `POST /livros` — Cria um novo livro
+- `POST /livros` — Cria um novo livro (**apenas admin**)
   ```json
   {
     "id": 1,
@@ -85,6 +114,8 @@ Authorization: Bearer SEU_TOKEN_AQUI
     "autorId": 1
   }
   ```
+- `PUT /livros/:id` — Atualiza um livro existente (**apenas admin**)
+- `DELETE /livros/:id` — Remove um livro (**apenas admin**)
 - `GET /livros/detalhes` — Lista livros com detalhes dos autores
 
 ---
@@ -104,6 +135,7 @@ npm test
 - Os dados são armazenados apenas em memória (ao reiniciar, tudo é perdido).
 - O projeto utiliza autenticação JWT apenas para exemplificação.
 - Não utilize a chave secreta padrão em produção.
+- Usuários comuns só podem visualizar dados; apenas o admin pode modificar.
 
 ---
 
