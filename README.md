@@ -164,7 +164,3 @@ npm test
 The project already includes a `.gitignore` to avoid versioning unnecessary files such as `node_modules`, `logs`, `coverage`, etc.
 
 ---
-
-## License
-
-MIT
