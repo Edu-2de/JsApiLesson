@@ -1,147 +1,147 @@
-# API RESTful de Livros e Autores
+# RESTful API for Books and Authors
 
-Este projeto é uma API RESTful simples desenvolvida em Node.js com Express, que permite gerenciar livros e autores, incluindo autenticação via JWT. Os dados são mantidos em memória (não persistentes).
+This project is a simple RESTful API developed in Node.js with Express, allowing you to manage books and authors, including JWT authentication. All data is stored in memory (not persistent).
 
-## Funcionalidades
+## Features
 
-- **Autenticação JWT** (`/auth/login`, `/auth/register`, `/auth/logout`)
-- **Registro de usuários comuns** (`/auth/register`)
-- **CRUD de Autores** (`/autores`)
-- **CRUD de Livros** (`/livros`)
-- **Listagem de livros com detalhes dos autores** (`/livros/detalhes`)
-- **Listagem de livros de um autor específico** (`/autores/:id/livros`)
-- **Permissões por papel (admin e usuário comum)**
-- **Testes automatizados com Jest e Supertest**
+- **JWT Authentication** (`/auth/login`, `/auth/register`, `/auth/logout`)
+- **User registration** (`/auth/register`)
+- **CRUD for Authors** (`/autores`)
+- **CRUD for Books** (`/livros`)
+- **List books with author details** (`/livros/detalhes`)
+- **List books by a specific author** (`/autores/:id/livros`)
+- **Role-based permissions (admin and regular user)**
+- **Automated tests with Jest and Supertest**
 
 ---
 
-## Instalação
+## Installation
 
-1. **Clone o repositório:**
+1. **Clone the repository:**
    ```bash
-   git clone https://github.com/seu-usuario/seu-repo.git
-   cd seu-repo
+   git clone https://github.com/your-username/your-repo.git
+   cd your-repo
    ```
 
-2. **Instale as dependências:**
+2. **Install dependencies:**
    ```bash
    npm install
    ```
 
 ---
 
-## Uso
+## Usage
 
-### Iniciar o servidor
+### Start the server
 
 ```bash
 npm start
 ```
 
-O servidor estará disponível em `http://localhost:3000`.
+The server will be available at `http://localhost:3000`.
 
 ---
 
-## Autenticação e Registro
+## Authentication and Registration
 
-Antes de acessar as rotas protegidas, obtenha um token JWT:
+Before accessing protected routes, obtain a JWT token:
 
 - **POST** `/auth/register`  
-  Registra um novo usuário (role padrão: `user`).  
-  Exemplo:
+  Registers a new user (default role: `user`).  
+  Example:
   ```json
   {
-    "username": "usuario",
-    "password": "senha"
+    "username": "user",
+    "password": "password"
   }
   ```
-  O usuário registrado só poderá visualizar livros e autores.
+  The registered user will only be able to view books and authors.
 
 - **POST** `/auth/login`  
-  Faz login e retorna um token JWT.  
-  Exemplo:
+  Logs in and returns a JWT token.  
+  Example:
   ```json
   {
     "username": "admin",
     "password": "1234"
   }
   ```
-  O usuário `admin` pode criar, atualizar e deletar livros/autores.
+  The `admin` user can create, update, and delete books/authors.
 
 - **POST** `/auth/logout`  
-  Logout simbólico. Basta remover o token do cliente.
+  Symbolic logout. Just remove the token on the client side.
 
-Inclua o token no header das requisições protegidas:
+Include the token in the header of protected requests:
 ```
-Authorization: Bearer SEU_TOKEN_AQUI
+Authorization: Bearer YOUR_TOKEN_HERE
 ```
 
 ---
 
-## Permissões
+## Permissions
 
-- **Usuário comum** (`user`):  
-  - Só pode visualizar (`GET`) livros e autores.
+- **Regular user** (`user`):  
+  - Can only view (`GET`) books and authors.
 - **Admin** (`admin`):  
-  - Pode criar, atualizar e deletar livros e autores.
+  - Can create, update, and delete books and authors.
 
 ---
 
 ## Endpoints
 
-### Autenticação
+### Authentication
 
-- `POST /auth/register` — Registra um novo usuário
-- `POST /auth/login` — Faz login e retorna um token JWT
-- `POST /auth/logout` — Logout simbólico (remova o token do cliente)
+- `POST /auth/register` — Register a new user
+- `POST /auth/login` — Log in and get a JWT token
+- `POST /auth/logout` — Symbolic logout (remove token on client)
 
-### Autores
+### Authors
 
-- `GET /autores` — Lista todos os autores
-- `GET /autores/:id` — Retorna um autor específico
-- `GET /autores/:id/livros` — Lista todos os livros de um autor específico
-- `POST /autores` — Cria um novo autor (**apenas admin**)
+- `GET /autores` — List all authors
+- `GET /autores/:id` — Get a specific author
+- `GET /autores/:id/livros` — List all books by a specific author
+- `POST /autores` — Create a new author (**admin only**)
   ```json
   {
     "id": 1,
-    "nome": "Nome do Autor"
+    "nome": "Author Name"
   }
   ```
-- `PUT /autores/:id` — Atualiza um autor existente (**apenas admin**)
+- `PUT /autores/:id` — Update an existing author (**admin only**)
   ```json
   {
-    "nome": "Novo Nome"
+    "nome": "New Name"
   }
   ```
-- `DELETE /autores/:id` — Remove um autor (**apenas admin**)
+- `DELETE /autores/:id` — Delete an author (**admin only**)
 
-### Livros
+### Books
 
-- `GET /livros` — Lista todos os livros (com nome do autor)
-- `GET /livros/:id` — Retorna um livro específico (com nome do autor)
-- `GET /livros/detalhes` — Lista livros com todos os detalhes (inclui objeto autor completo)
-- `POST /livros` — Cria um novo livro (**apenas admin**)
+- `GET /livros` — List all books (with author name)
+- `GET /livros/:id` — Get a specific book (with author name)
+- `GET /livros/detalhes` — List books with all details (includes full author object)
+- `POST /livros` — Create a new book (**admin only**)
   ```json
   {
     "id": 1,
-    "titulo": "Nome do Livro",
+    "titulo": "Book Title",
     "autorId": 1
   }
   ```
-- `PUT /livros/:id` — Atualiza um livro existente (**apenas admin**)
+- `PUT /livros/:id` — Update an existing book (**admin only**)
   ```json
   {
-    "titulo": "Novo Título",
+    "titulo": "New Title",
     "autorId": 2
   }
   ```
-- `DELETE /livros/:id` — Remove um livro (**apenas admin**)
+- `DELETE /livros/:id` — Delete a book (**admin only**)
 
 ---
 
-## Testes
+## Tests
 
-Execute todos os testes automatizados com:
+Run all automated tests with:
 
 ```bash
 npm test
@@ -149,22 +149,22 @@ npm test
 
 ---
 
-## Observações
+## Notes
 
-- Os dados são armazenados apenas em memória (ao reiniciar, tudo é perdido).
-- O projeto utiliza autenticação JWT apenas para exemplificação.
-- Não utilize a chave secreta padrão em produção.
-- Usuários comuns só podem visualizar dados; apenas o admin pode modificar.
-- Para acessar rotas protegidas, sempre envie o token JWT no header.
+- Data is stored only in memory (everything is lost on restart).
+- JWT authentication is for demonstration purposes only.
+- Do not use the default secret key in production.
+- Regular users can only view data; only the admin can modify it.
+- To access protected routes, always send the JWT token in the header.
 
 ---
 
 ## .gitignore
 
-O projeto já inclui um `.gitignore` para evitar versionar arquivos desnecessários como `node_modules`, `logs`, `coverage`, etc.
+The project already includes a `.gitignore` to avoid versioning unnecessary files such as `node_modules`, `logs`, `coverage`, etc.
 
 ---
 
-## Licença
+## License
 
 MIT
